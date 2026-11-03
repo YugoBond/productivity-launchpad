@@ -37,6 +37,7 @@
             border-radius: 0;
             padding: 0.65rem 0.9rem;
             cursor: pointer;
+            background: var(--ink);
             color: var(--paper);
             font-size: 0.76rem;
             font-weight: 800;
@@ -45,10 +46,11 @@
         }
         button:hover {
             background: var(--accent-dark);
+            color: var(--paper);
         }
-        button:active{
-            color: var(--ink);
-            background: var(--paper);
+        button:active {
+            background: var(--accent);
+            color: var(--paper);
         }
         button:disabled{
             color: var(--paper);
@@ -340,7 +342,7 @@
                     <div class="timer-controls">
                         <label class="duration-field">
                             <span class="field-label">Minutes</span>
-                            <input type="button" id="duration" min="1" max="180" value="25">
+                            <input type="number" id="duration" min="1" max="180" value="25">
                         </label>
                         <button id="start" type="button">Start</button>
                         <button id="pause" class="secondary" type="button">Pause</button>
