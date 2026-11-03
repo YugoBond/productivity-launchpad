@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Launchpad</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #e7e3d8;
+            color: #171815;
+            --paper: #f6f3ea;
+            --ink: #171815;
+            --muted: #66665f;
+            --line: #aaa79d;
+            --accent: #d94f2b;
+            --accent-dark: #923119;
+            --status: #246b4a;
+            --danger: #9d2f24;
+        }
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            min-height: 100vh;
+            background: #e7e3d8;
+        }
+
+        button, input {font: inherit;}
+
+        button {
+            min-height: 2.75rem;
+            border: 1px solid var(--ink);
+            border-radius: 0;
+            padding: 0.65rem 0.9rem;
+            cursor: pointer;
+            color: var(--paper);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.08rem;
+            text-transform: uppercase;
+        }
+        button:hover {
+            background: var(--accent-dark);
+        }
+        button:active{
+            color: var(--ink);
+            background: var(--paper);
+        }
+        button:disabled{
+            color: var(--paper);
+            background: #d2cec3;
+            cursor: not-allowed;
+        }
+        button.secondary{
+            background: transparent;
+            color: var(--ink);
+        }
+        button.secondary:hover{
+            background: var(--ink);
+            color: var(--paper);
+        }
+        button.danger{
+            background: transparent;
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+        button.danger:hover{
+            background: var(--danger);
+            color: var(--paper);
+        }
+        input{
+            width: 100%;
+            min-height: 2.75rem;
+            border: 1px solid var(--line);
+            border-radius: 0;
+            padding: 0.7rem 0.75rem;
+            background: #fffdf7;
+            color: var(--ink);
+        }
+        input::placeholder{
+            color: #77766f;
+        }
+        :where(button, input, a):focus-visible{
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
+        a{
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration-thickness: 0.12em;
+            text-underline-offset: 0.2em;
+        }
+        a:hover { color: var(--accent); }
+
+    .shell {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 1rem auto;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+      padding: clamp(1.25rem, 3vw, 2.5rem);
+      border-bottom: 4px solid var(--ink);
+    }
+
+    .eyebrow, .section-number, .field-label, #save-status {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow { margin-bottom: 0.7rem; color: var(--accent-dark); }
+
+    h1, h2, p { margin-top: 0; }
+
+    h1 {
+      max-width: 14ch;
+      margin-bottom: 0.55rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.35rem, 7vw, 5.7rem);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.055em;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .muted { color: var(--muted); }
+    #today { margin-bottom: 0; font-size: 0.9rem; }
+
+    #save-status {
+      min-width: 9rem;
+      margin-bottom: 0.2rem;
+      padding: 0.55rem 0.7rem;
+      color: var(--status);
+      border: 1px solid currentColor;
+      text-align: center;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 0.8rem;
+      align-items: baseline;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-number { color: var(--accent-dark); }
+
+    .priority-panel {
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .priority-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 0.65rem;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(19rem, 0.65fr);
+    }
+
+    .focus-panel {
+      min-width: 0;
+      padding: clamp(1.25rem, 4vw, 3rem);
+      border-right: 1px solid var(--ink);
+    }
+
+    .timer {
+      margin: clamp(1.5rem, 5vw, 4.5rem) 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(4.5rem, 15vw, 10.5rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 400;
+      line-height: 0.8;
+      letter-spacing: -0.075em;
+    }
+
+    .timer-controls {
+      display: grid;
+      grid-template-columns: minmax(7rem, 0.8fr) repeat(4, auto);
+      gap: 0.55rem;
+      align-items: end;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--muted);
+    }
+
+    .rail { min-width: 0; }
+
+    .links-panel, .history-panel {
+      padding: clamp(1.25rem, 3vw, 2rem);
+    }
+
+    .links-panel { border-bottom: 1px solid var(--ink); }
+
+    .stack { display: grid; gap: 0.6rem; }
+
+    ul, ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .link-list {
+      padding: 0;
+      margin-top: 1.25rem;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .link-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: center;
+      min-height: 3rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .link-list button { min-height: 2.1rem; padding: 0.4rem 0.55rem; }
+
+    .history-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 1.25rem;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .stat { padding: 0.8rem 0; }
+    .stat + .stat { padding-left: 1rem; border-left: 1px solid var(--ink); }
+
+    .stat strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .stat span {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #history {
+      display: grid;
+      gap: 0.65rem;
+      padding-left: 1.3rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      .workspace { grid-template-columns: 1fr; }
+      .focus-panel { border-right: 0; border-bottom: 1px solid var(--ink); }
+      .timer-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .duration-field { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: calc(100% - 1rem); margin: 0.5rem auto; }
+      .masthead { grid-template-columns: 1fr; gap: 1.25rem; }
+      #save-status { width: 100%; text-align: left; }
+      .priority-form { grid-template-columns: 1fr; }
+      .timer { font-size: clamp(4rem, 25vw, 7rem); }
+      .timer-controls { grid-template-columns: 1fr 1fr; }
+      .timer-controls button { width: 100%; }
+      .history-heading { align-items: center; }
+    }
+    </style>
+</head>
+    <body>
+        <main class="shell">
+            <header class="masthead">
+                <div>
+                    <p class="eyebrow">Local workstation / Daily docket</p>
+                    <h1>Productivity Launchpad</h1>
+                    <p id="today" class="muted"></p>
+                </div>
+                <p id="save-status" aria-live="polite">Loading...</p>
+            </header>
+
+            <section class="priority-panel" aria-labelledby="priority-heading">
+                <div class="section-heading">
+                    <span class="section-number">01</span>
+                    <h2 id="priority-heading">Today's Priority</h2>
+                </div>
+                <form id="priority-form" class="priority-form">
+                    <input id="priority" maxlength="120" placeholder="What would make today successful?" required>
+                    <button type="submit">Save Priority</button>
+                    <button id="reset-day" class="secondary" type="button">Reset Day</button>
+                </form>
+            </section>
+
+            <section class="workspace">
+                <article class="focus-panel" aria-labelledby="focus-heading">
+                    <div class="section-heading">
+                        <span class="section-number">02</span>
+                        <h2 id="focus-heading">Focus session</h2>
+                    </div>
+                    <div id="timer" class="timer" aria-live="off">25:00</div>
+                    <div class="timer-controls">
+                        <label class="duration-field">
+                            <span class="field-label">Minutes</span>
+                            <input type="button" id="duration" min="1" max="180" value="25">
+                        </label>
+                        <button id="start" type="button">Start</button>
+                        <button id="pause" class="secondary" type="button">Pause</button>
+                        <button id="reset-timer" class="secondary" type="button">Reset</button>
+                        <button id="complete" class="secondary" type="button">Complete now</button>
+                    </div>
+                </article>
+                <aside class="rail" aria-label="Launchpad records">
+                    <section class="links-panel" aria-labelledby="links-heading"> 
+                        <div class="section-heading">
+                            <span class="section-number">03</span>
+                            <h2 id="links-heading">Pinned Links</h2>
+                        </div>
+                        <form id="link-form" class="stack">
+                            <input id="link-label" maxlength="50" aria-label="Link label" placeholder="Label" required>
+                            <input type="url" id="link-url" maxlength="500" aria-label="Link URL" placeholder="https://example.com" required>
+                            <button type="submit">Pin Link</button>
+                        </form>
+                        <ul id="links" class="link-list"></ul>
+                    </section>
+                    
+                    <section class="history-panel" aria-labelledby="history-heading">
+                        <div class="section-heading history-heading">
+                            <div style="display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.8rem; align-items: baseline;">
+                            <span class="section-number">04</span>
+                            <h2 id="history-heading">Focus log</h2>
+                            </div>
+                            <button id="clear-history" class="danger" type="button">Clear</button>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <strong id="session-count">0</strong>
+                                <span class="muted">sessions</span>
+                            </div>
+                            <div class="stat">
+                                <strong id="minute-count">0</strong>
+                                <span class="muted">minutes</span>
+                            </div>
+                            <ol id="history"></ol>
+                    </section>
+                </aside>
+            </section>
+        </main>
+        <script>
+            const elements ={
+                today: document.querySelector("#today"),
+                status: document.querySelector("#save-status"),
+                priorityForm: document.querySelector("#priority-form"),
+                priority: document.querySelector("#priority"),
+                resetDay: document.querySelector("#reset-day"),
+                timer: document.querySelector("#timer"),
+                duration: document.querySelector("#duration"),
+                start: document.querySelector("#start"),
+                pause: document.querySelector("#pause"),
+                resetTimer: document.querySelector("#reset-timer"),
+                complete: document.querySelector("#complete"),
+                linkForm: document.querySelector("#link-form"),
+                linkLabel: document.querySelector("#link-label"),
+                linkUrl: document.querySelector("#link-url"),
+                links: document.querySelector("#links"),
+                sessionCount: document.querySelector("#session-count"),
+                minuteCount: document.querySelector("#minute-count"),
+                history: document.querySelector("#history"),
+                clearHistory: document.querySelector("#clear-history"),
+                };
+
+                // Keep the current state and countdown values available to every interaction.
+                let state = { priority: "", duration: 25, links: [], sessions: [] };
+                let remainingSeconds = state.duration * 60;
+                let intervalId = null;
+
+                elements.today.textContent = new Date().toLocaleDateString(undefined, {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                });
+
+                function setStatus(message) {
+                elements.status.textContent = message;
+                }
+
+                // Load and save the shared state through the Python JSON endpoint.
+                async function loadState() {
+                const response = await fetch("/api/state");
+                if (!response.ok) throw new Error("Could not load state");
+                state = await response.json();
+                renderAll();
+                setStatus("Ready");
+                }
+
+                async function saveState() {
+                setStatus("Saving...");
+                const response = await fetch("/api/state", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(state),
+                });
+                if (!response.ok) throw new Error("Could not save state");
+                state = await response.json();
+                setStatus("Saved");
+                }
+
+                // Render every saved value when the page first loads.
+                function renderAll() {
+                elements.priority.value = state.priority;
+                elements.duration.value = state.duration;
+                renderLinks();
+                renderHistory();
+                resetTimer();
+                }
+
+                function renderLinks() {
+                elements.links.replaceChildren();
+                if (state.links.length === 0) {
+                    const empty = document.createElement("li");
+                    empty.textContent = "No links pinned yet.";
+                    elements.links.append(empty);
+                    return;
+                }
+
+                state.links.forEach((link, index) => {
+                    const item = document.createElement("li");
+                    const anchor = document.createElement("a");
+                    anchor.href = link.url;
+                    anchor.target = "_blank";
+                    anchor.rel = "noreferrer";
+                    anchor.textContent = link.label;
+
+                    const remove = document.createElement("button");
+                    remove.type = "button";
+                    remove.className = "secondary";
+                    remove.textContent = "Remove";
+                    remove.addEventListener("click", async () => {
+                    state.links.splice(index, 1);
+                    await saveState();
+                    renderLinks();
+                    });
+
+                    item.append(anchor, remove);
+                    elements.links.append(item);
+                });
+                }
+
+                function renderHistory() {
+                elements.sessionCount.textContent = state.sessions.length;
+                elements.minuteCount.textContent = state.sessions.reduce(
+                    (total, session) => total + session.minutes,
+                    0,
+                );
+                elements.history.replaceChildren();
+
+                if (state.sessions.length === 0) {
+                    const empty = document.createElement("li");
+                    empty.textContent = "Complete a focus session to start your history.";
+                    elements.history.append(empty);
+                    return;
+                }
+
+                state.sessions.slice(0, 6).forEach((session) => {
+                    const item = document.createElement("li");
+                    const when = new Date(session.completedAt).toLocaleString();
+                    item.textContent = `${session.goal} · ${session.minutes} min · ${when}`;
+                    elements.history.append(item);
+                });
+                }
+
+                // Keep the timer display and browser title in sync.
+                function updateTimerDisplay() {
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                elements.timer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                document.title = `${elements.timer.textContent} · Productivity Launchpad`;
+                }
+
+                function pauseTimer() {
+                if (intervalId !== null) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+                }
+
+                function resetTimer() {
+                pauseTimer();
+                remainingSeconds = Number(state.duration) * 60;
+                updateTimerDisplay();
+                }
+
+                async function completeSession() {
+                pauseTimer();
+                state.sessions.unshift({
+                    goal: state.priority.trim() || "Focus session",
+                    minutes: Number(state.duration),
+                    completedAt: new Date().toISOString(),
+                });
+                state.sessions = state.sessions.slice(0, 100);
+                await saveState();
+                renderHistory();
+                resetTimer();
+                }
+
+                // Connect form submissions and buttons to state changes.
+                elements.priorityForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                state.priority = elements.priority.value.trim();
+                await saveState();
+                });
+
+                elements.resetDay.addEventListener("click", async () => {
+                state.priority = "";
+                elements.priority.value = "";
+                await saveState();
+                });
+
+                elements.duration.addEventListener("change", async () => {
+                const value = Math.max(1, Math.min(Number(elements.duration.value) || 25, 180));
+                state.duration = value;
+                elements.duration.value = value;
+                await saveState();
+                resetTimer();
+                });
+
+                elements.start.addEventListener("click", () => {
+                if (intervalId !== null) return;
+                intervalId = setInterval(() => {
+                    remainingSeconds -= 1;
+                    updateTimerDisplay();
+                    if (remainingSeconds <= 0) completeSession();
+                }, 1000);
+                });
+
+                elements.pause.addEventListener("click", pauseTimer);
+                elements.resetTimer.addEventListener("click", resetTimer);
+                elements.complete.addEventListener("click", completeSession);
+
+                elements.linkForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const label = elements.linkLabel.value.trim();
+                const url = elements.linkUrl.value.trim();
+                if (!url.startsWith("https://") && !url.startsWith("http://")) return;
+                state.links.push({ label, url });
+                await saveState();
+                elements.linkForm.reset();
+                renderLinks();
+                });
+
+                elements.clearHistory.addEventListener("click", async () => {
+                state.sessions = [];
+                await saveState();
+                renderHistory();
+                });
+
+                loadState().catch((error) => {
+                console.error(error);
+                setStatus("Connection error");
+                });
+            </script>
+    </body>
+</html>
