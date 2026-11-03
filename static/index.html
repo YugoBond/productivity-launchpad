@@ -3,1328 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productivity Launchpad · Daily docket</title>
+    <title>Productivity Launchpad</title>
     <style>
-        /* ---------- RESET & BASE ---------- */
-        * {
+        :root {
+            color-scheme: light;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #e7e3d8;
+            color: #171815;
+            --paper: #f6f3ea;
+            --ink: #171815;
+            --muted: #66665f;
+            --line: #aaa79d;
+            --accent: #d94f2b;
+            --accent-dark: #923119;
+            --status: #246b4a;
+            --danger: #9d2f24;
+        }
+        *{
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
-        :root {
-            /* refined palette – warm paper, ink, muted accents */
-            --paper: #fcf9f2;
-            --paper-alt: #f5efe4;
-            --ink: #1e1c18;
-            --ink-soft: #3b3832;
-            --muted: #6b6860;
-            --line: #d9d2c5;
-            --line-strong: #b9b1a2;
-            --accent: #c4492e;
-            --accent-dark: #962f1c;
-            --status: #2f6b4f;
-            --danger: #a13d30;
-            --white: #ffffff;
-
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e7e1d6;
-            color: var(--ink);
-        }
-
-        body {
+        body{
             min-height: 100vh;
-            background: #e7e1d6;
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            background: #e7e3d8;
         }
 
-        /* ---------- TYPOGRAPHY ---------- */
-        h1, h2, h3, p, ul, ol, figure {
-            margin: 0;
-        }
-
-        h1 {
-            max-width: 100%;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-weight: 400;
-            font-size: clamp(2.2rem, 7vw, 4.8rem);
-            line-height: 0.92;
-            letter-spacing: -0.03em;
-            color: var(--ink);
-        }
-
-        h2 {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-weight: 700;
-            font-size: 0.82rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--ink-soft);
-        }
-
-        .eyebrow, .section-number, .field-label, #save-status {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .eyebrow {
-            color: var(--accent-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-number {
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-block;
-        }
-
-        .muted {
-            color: var(--muted);
-        }
-
-        a {
-            color: var(--accent-dark);
-            font-weight: 600;
-            text-decoration-thickness: 0.12em;
-            text-underline-offset: 0.2em;
-        }
-
-        a:hover {
-            color: var(--accent);
-        }
-
-        /* ---------- SHELL / LAYOUT ---------- */
-        .shell {
-            width: min(1180px, 100%);
-            margin: 0 auto;
-            background: var(--paper);
-            border: 1px solid var(--ink);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-        }
-
-        /* ---------- MASTHEAD ---------- */
-        .masthead {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: end;
-            padding: 2rem 2.5rem;
-            border-bottom: 3px solid var(--ink);
-            background: var(--paper);
-        }
-
-        #today {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-top: 0.6rem;
-            letter-spacing: 0.01em;
-        }
-
-        #save-status {
-            padding: 0.45rem 1rem;
-            border: 1px solid var(--status);
-            color: var(--status);
-            background: transparent;
-            text-align: center;
-            min-width: 8.5rem;
-            transition: none;
-            font-size: 0.65rem;
-            line-height: 1.3;
-        }
-
-        /* ---------- BUTTONS & INPUTS ---------- */
-        button, input, select, textarea {
-            font: inherit;
-        }
+        button, input {font: inherit;}
 
         button {
-            min-height: 2.6rem;
+            min-height: 2.75rem;
             border: 1px solid var(--ink);
             border-radius: 0;
-            padding: 0.55rem 1.1rem;
+            padding: 0.65rem 0.9rem;
             cursor: pointer;
             color: var(--paper);
-            background: var(--ink);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.08rem;
             text-transform: uppercase;
-            transition: background 0.1s, color 0.1s, border-color 0.1s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.2;
-            box-shadow: none;
         }
-
         button:hover {
             background: var(--accent-dark);
-            border-color: var(--accent-dark);
         }
-
-        button:active {
-            background: var(--paper);
+        button:active{
             color: var(--ink);
-            border-color: var(--ink);
+            background: var(--paper);
         }
-
-        button:disabled {
-            background: var(--line);
-            border-color: var(--line-strong);
+        button:disabled{
             color: var(--paper);
+            background: #d2cec3;
             cursor: not-allowed;
         }
-
-        button.secondary {
+        button.secondary{
             background: transparent;
             color: var(--ink);
-            border-color: var(--line-strong);
         }
-
-        button.secondary:hover {
+        button.secondary:hover{
             background: var(--ink);
             color: var(--paper);
-            border-color: var(--ink);
         }
-
-        button.danger {
+        button.danger{
             background: transparent;
             color: var(--danger);
             border-color: var(--danger);
         }
-
-        button.danger:hover {
+        button.danger:hover{
             background: var(--danger);
             color: var(--paper);
         }
-
-        input {
+        input{
             width: 100%;
-            min-height: 2.6rem;
-            border: 1px solid var(--line-strong);
+            min-height: 2.75rem;
+            border: 1px solid var(--line);
             border-radius: 0;
-            padding: 0.55rem 0.8rem;
-            background: var(--white);
+            padding: 0.7rem 0.75rem;
+            background: #fffdf7;
             color: var(--ink);
-            font-size: 0.9rem;
-            line-height: 1.4;
         }
-
-        input::placeholder {
-            color: #9b978f;
-            font-weight: 400;
-            font-size: 0.85rem;
+        input::placeholder{
+            color: #77766f;
         }
-
-        input:focus-visible,
-        button:focus-visible,
-        a:focus-visible {
-            outline: 2px solid var(--accent);
+        :where(button, input, a):focus-visible{
+            outline: 3px solid var(--accent);
             outline-offset: 3px;
         }
-
-        /* ---------- SECTION HEADING ---------- */
-        .section-heading {
-            display: grid;
-            grid-template-columns: 2.2rem 1fr;
-            gap: 0.8rem;
-            align-items: baseline;
-            margin-bottom: 1.5rem;
-        }
-
-        /* ---------- PRIORITY PANEL ---------- */
-        .priority-panel {
-            padding: 1.8rem 2.5rem;
-            border-bottom: 1px solid var(--ink);
-            background: var(--paper-alt);
-        }
-
-        .priority-form {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto auto;
-            gap: 0.7rem;
-        }
-
-        /* ---------- WORKSPACE ---------- */
-        .workspace {
-            display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(19rem, 0.75fr);
-        }
-
-        .focus-panel {
-            padding: 2.5rem;
-            border-right: 1px solid var(--ink);
-            background: var(--paper);
-        }
-
-        .timer {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: clamp(4.5rem, 15vw, 9.5rem);
-            line-height: 0.8;
-            letter-spacing: -0.05em;
-            font-weight: 400;
-            color: var(--ink);
-            margin: 2rem 0 2.5rem 0;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .timer-controls {
-            display: grid;
-            grid-template-columns: minmax(6.5rem, 0.7fr) repeat(4, auto);
-            gap: 0.6rem;
-            align-items: end;
-            padding-top: 1.2rem;
-            border-top: 1px solid var(--line-strong);
-        }
-
-        .duration-field .field-label {
-            display: block;
-            margin-bottom: 0.3rem;
-            color: var(--muted);
-            font-size: 0.65rem;
-        }
-
-        /* ---------- RAIL (SIDEBAR) ---------- */
-        .rail {
-            display: flex;
-            flex-direction: column;
-            background: var(--paper);
-        }
-
-        .links-panel {
-            padding: 2rem 2rem 1.8rem;
-            border-bottom: 1px solid var(--ink);
-        }
-
-        .history-panel {
-            padding: 1.8rem 2rem;
-            flex: 1;
-        }
-
-        .stack {
-            display: grid;
-            gap: 0.7rem;
-        }
-
-        /* ---------- LINK LIST ---------- */
-        .link-list {
-            list-style: none;
-            padding: 0;
-            margin-top: 1.5rem;
-            border-top: 1px solid var(--line);
-        }
-
-        .link-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.75rem;
-            min-height: 3rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 0.9rem;
-        }
-
-        .link-list li a {
-            font-weight: 600;
-            color: var(--ink-soft);
-            text-decoration: none;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 65%;
-        }
-
-        .link-list li a:hover {
-            color: var(--accent);
-            text-decoration: underline;
-            text-underline-offset: 0.2em;
-        }
-
-        .link-list button {
-            min-height: 1.9rem;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.65rem;
-            background: transparent;
-            color: var(--muted);
-            border-color: var(--line-strong);
-        }
-
-        .link-list button:hover {
-            background: var(--danger);
-            color: var(--paper);
-            border-color: var(--danger);
-        }
-
-        /* ---------- HISTORY / STATS ---------- */
-        .history-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .history-heading .section-heading {
-            margin-bottom: 0;
-            flex: 1;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 1px solid var(--ink);
-            border-bottom: 1px solid var(--ink);
-            margin-bottom: 1.5rem;
-        }
-
-        .stat {
-            padding: 0.9rem 0;
-        }
-
-        .stat + .stat {
-            padding-left: 1rem;
-            border-left: 1px solid var(--ink);
-        }
-
-        .stat strong {
-            display: block;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 2.2rem;
-            font-weight: 400;
-            line-height: 1;
-            color: var(--ink);
-        }
-
-        .stat span {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        #history {
-            list-style: decimal;
-            padding-left: 1.4rem;
-            margin: 0;
-            color: var(--muted);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        #history li::marker {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 920px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-
-            .focus-panel {
-                border-right: 0;
-                border-bottom: 1px solid var(--ink);
-                padding: 2rem;
-            }
-
-            .timer-controls {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .duration-field {
-                grid-column: 1 / -1;
-            }
-
-            .rail {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .links-panel {
-                border-bottom: 0;
-                border-right: 1px solid var(--ink);
-            }
-        }
-
-        @media (max-width: 640px) {
-            body {
-                padding: 0.4rem;
-            }
-
-            .shell {
-                border-width: 1px;
-            }
-
-            .masthead {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                padding: 1.5rem 1.25rem;
-            }
-
-            #save-status {
-                width: 100%;
-                text-align: left;
-            }
-
-            .priority-panel {
-                padding: 1.5rem 1.25rem;
-            }
-
-            .priority-form {
-                grid-template-columns: 1fr;
-            }
-
-            .focus-panel {
-                padding: 1.5rem 1.25rem;
-            }
-
-            .timer {
-                font-size: clamp(3.8rem, 22vw, 6rem);
-                margin: 1.5rem 0 1.8rem;
-            }
-
-            .timer-controls {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem;
-            }
-
-            .timer-controls button {
-                width: 100%;
-                padding-inline: 0.5rem;
-                font-size: 0.68rem;
-            }
-
-            .rail {
-                grid-template-columns: 1fr;
-            }
-
-            .links-panel {
-                border-right: 0;
-                border-bottom: 1px solid var(--ink);
-                padding: 1.5rem 1.25rem;
-            }
-
-            .history-panel {
-                padding: 1.5rem 1.25rem;
-            }
-
-            .history-heading {
-                flex-wrap: wrap;
-            }
-
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .section-heading {
-                grid-template-columns: 1.8rem 1fr;
-                gap: 0.5rem;
-            }
-        }
-
-        /* subtle state utilities */
-        .link-list li:last-child {
-            border-bottom: none;
-        }
-
-        .link-list .empty-message {
-            color: var(--muted);
-            font-style: italic;
-            justify-content: center;
-            font-size: 0.85rem;
-            padding: 1rem 0;
-            border-bottom: none;
-        }
-    </style>
-</head>
-<body>
-    <main class="shell">
-        <header class="masthead">
-            <div>
-                <p class="eyebrow">Local workstation / Daily docket</p>
-                <h1>Productivity Launchpad</h1>
-                <p id="today" class="muted"></p>
-            </div>
-            <p id="save-status" aria-live="polite">Loading...</p>
-        </header>
-
-        <section class="priority-panel" aria-labelledby="priority-heading">
-            <div class="section-heading">
-                <span class="section-number">01</span>
-                <h2 id="priority-heading">Today's Priority</h2>
-            </div>
-            <form id="priority-form" class="priority-form">
-                <input id="priority" maxlength="120" placeholder="What would make today successful?" required>
-                <button type="submit">Save Priority</button>
-                <button id="reset-day" class="secondary" type="button">Reset Day</button>
-            </form>
-        </section>
-
-        <section class="workspace">
-            <article class="focus-panel" aria-labelledby="focus-heading">
-                <div class="section-heading">
-                    <span class="section-number">02</span>
-                    <h2 id="focus-heading">Focus session</h2>
-                </div>
-                <div id="timer" class="timer" aria-live="off">25:00</div>
-                <div class="timer-controls">
-                    <label class="duration-field">
-                        <span class="field-label">Minutes</span>
-                        <input type="button" id="duration" min="1" max="180" value="25">
-                    </label>
-                    <button id="start" type="button">Start</button>
-                    <button id="pause" class="secondary" type="button">Pause</button>
-                    <button id="reset-timer" class="secondary" type="button">Reset</button>
-                    <button id="complete" class="secondary" type="button">Complete now</button>
-                </div>
-            </article>
-            <aside class="rail" aria-label="Launchpad records">
-                <section class="links-panel" aria-labelledby="links-heading">
-                    <div class="section-heading">
-                        <span class="section-number">03</span>
-                        <h2 id="links-heading">Pinned Links</h2>
-                    </div>
-                    <form id="link-form" class="stack">
-                        <input id="link-label" maxlength="50" aria-label="Link label" placeholder="Label" required>
-                        <input type="url" id="link-url" maxlength="500" aria-label="Link URL" placeholder="https://example.com" required>
-                        <button type="submit">Pin Link</button>
-                    </form>
-                    <ul id="links" class="link-list"></ul>
-                </section>
-
-                <section class="history-panel" aria-labelledby="history-heading">
-                    <div class="history-heading">
-                        <div class="section-heading">
-                            <span class="section-number">04</span>
-                            <h2 id="history-heading">Focus log</h2>
-                        </div>
-                        <button id="clear-history" class="danger" type="button">Clear</button>
-                    </div>
-                    <div class="stats">
-                        <div class="stat">
-                            <strong id="session-count">0</strong>
-                            <span class="muted">sessions</span>
-                        </div>
-                        <div class="stat">
-                            <strong id="minute-count">0</strong>
-                            <span class="muted">minutes</span>
-                        </div>
-                    </div>
-                    <ol id="history"></ol>
-                </section>
-            </aside>
-        </section>
-    </main>
-
-    <script>
-        // minimal JS for demonstration – keeps the interface "alive"
-        // (This is not production logic, just enough to show states.)
-        (function() {
-            // --- static demo date ---
-            const todayEl = document.getElementById('today');
-            if (todayEl) {
-                const d = new Date();
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                todayEl.textContent = d.toLocaleDateString('en-US', options);
-            }
-
-            // --- save-status demo ---
-            const saveStatus = document.getElementById('save-status');
-            if (saveStatus) {
-                saveStatus.textContent = 'Ready';
-                saveStatus.style.borderColor = 'var(--status)';
-                saveStatus.style.color = 'var(--status)';
-            }
-
-            // --- timer (static demo, no full logic) ---
-            const timerEl = document.getElementById('timer');
-            const startBtn = document.getElementById('start');
-            const pauseBtn = document.getElementById('pause');
-            const resetTimerBtn = document.getElementById('reset-timer');
-            const completeBtn = document.getElementById('complete');
-            const durationInput = document.getElementById('duration');
-
-            // not implementing full timer logic, just showing a static state
-            if (timerEl) timerEl.textContent = '25:00';
-
-            // --- pinned links demo (static) ---
-            const linkList = document.getElementById('links');
-            if (linkList) {
-                // add a sample link to show the visual
-                const sampleItem = document.createElement('li');
-                sampleItem.innerHTML = '<a href="https://developer.mozilla.org" target="_blank" rel="noopener">MDN Web Docs</a><button class="danger" type="button" aria-label="Remove link">✕</button>';
-                linkList.appendChild(sampleItem);
-                // another
-                const sampleItem2 = document.createElement('li');
-                sampleItem2.innerHTML = '<a href="https://github.com" target="_blank" rel="noopener">GitHub</a><button class="danger" type="button" aria-label="Remove link">✕</button>';
-                linkList.appendChild(sampleItem2);
-            }
-
-            // --- history demo ---
-            const historyList = document.getElementById('history');
-            if (historyList) {
-                const sampleEntry = document.createElement('li');
-                sampleEntry.textContent = '25 min · 10:32 AM';
-                historyList.appendChild(sampleEntry);
-                const sampleEntry2 = document.createElement('li');
-                sampleEntry2.textContent = '45 min · 09:15 AM';
-                historyList.appendChild(sampleEntry2);
-            }
-
-            // --- stats demo ---
-            const sessionCount = document.getElementById('session-count');
-            const minuteCount = document.getElementById('minute-count');
-            if (sessionCount) sessionCount.textContent = '2';
-            if (minuteCount) minuteCount.textContent = '70';
-
-            // --- priority input demo (no persistence) ---
-            const priorityInput = document.getElementById('priority');
-            const priorityForm = document.getElementById('priority-form');
-            if (priorityForm) {
-                priorityForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    if (saveStatus) {
-                        saveStatus.textContent = 'Saved ✓';
-                        setTimeout(() => {
-                            saveStatus.textContent = 'Ready';
-                        }, 1500);
-                    }
-                });
-            }
-
-            // --- reset day button (demo) ---
-            const resetDayBtn = document.getElementById('reset-day');
-            if (resetDayBtn) {
-                resetDayBtn.addEventListener('click', () => {
-                    if (priorityInput) priorityInput.value = '';
-                    if (saveStatus) {
-                        saveStatus.textContent = 'Reset';
-                        setTimeout(() => {
-                            saveStatus.textContent = 'Ready';
-                        }, 1000);
-                    }
-                });
-            }
-
-            // --- link form demo (adds item) ---
-            const linkForm = document.getElementById('link-form');
-            const linkLabel = document.getElementById('link-label');
-            const linkUrl = document.getElementById('link-url');
-            if (linkForm && linkList) {
-                linkForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    if (!linkLabel.value.trim() || !linkUrl.value.trim()) return;
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a href="${linkUrl.value}" target="_blank" rel="noopener">${linkLabel.value}</a><button class="danger" type="button" aria-label="Remove link">✕</button>`;
-                    linkList.appendChild(li);
-                    linkLabel.value = '';
-                    linkUrl.value = '';
-                });
-                // delegate remove
-                linkList.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'BUTTON' && e.target.classList.contains('danger')) {
-                        e.target.closest('li').remove();
-                    }
-                });
-            }
-
-            // --- clear history demo ---
-            const clearHistoryBtn = document.getElementById('clear-history');
-            if (clearHistoryBtn && historyList) {
-                clearHistoryBtn.addEventListener('click', () => {
-                    historyList.innerHTML = '';
-                    if (sessionCount) sessionCount.textContent = '0';
-                    if (minuteCount) minuteCount.textContent = '0';
-                });
-            }
-
-            // --- timer buttons just for feedback ---
-            if (startBtn) {
-                startBtn.addEventListener('click', () => {
-                    if (saveStatus) {
-                        saveStatus.textContent = 'Running…';
-                        setTimeout(() => {
-                            saveStatus.textContent = 'Ready';
-                        }, 1000);
-                    }
-                });
-            }
-            if (pauseBtn) {
-                pauseBtn.addEventListener('click', () => {
-                    if (saveStatus) {
-                        saveStatus.textContent = 'Paused';
-                        setTimeout(() => {
-                            saveStatus.textContent = 'Ready';
-                        }, 1000);
-                    }
-                });
-            }
-            if (resetTimerBtn) {
-                resetTimerBtn.addEventListener('click', () => {
-                    if (timerEl) timerEl.textContent = '25:00';
-                });
-            }
-            if (completeBtn) {
-                completeBtn.addEventListener('click', () => {
-                    if (historyList) {
-                        const li = document.createElement('li');
-                        const now = new Date();
-                        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                        li.textContent = `25 min · ${timeStr}`;
-                        historyList.prepend(li);
-                    }
-                    if (sessionCount) {
-                        sessionCount.textContent = String(Number(sessionCount.textContent || 0) + 1);
-                    }
-                    if (minuteCount) {
-                        minuteCount.textContent = String(Number(minuteCount.textContent || 0) + 25);
-                    }
-                });
-            }
-
-            // duration input type button – just visual feedback on click
-            if (durationInput) {
-                durationInput.addEventListener('click', function() {
-                    // it's a button – simulate changing minutes (just visual)
-                    const val = prompt('Set focus minutes (1–180):', this.value);
-                    if (val !== null && !isNaN(val) && val >= 1 && val <= 180) {
-                        this.value = val;
-                        if (timerEl) timerEl.textContent = `${String(val).padStart(2, '0')}:00`;
-                    }
-                });
-            }
-        })();
-    </script>
-</body>
-</html>
-
-i dont need media tags because its a docker container
-
-Got it — removing the media queries since this is a fixed container. Here's the cleaned-up version:
-html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Productivity Launchpad · Daily docket</title>
-    <style>
-        /* ---------- RESET & BASE ---------- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --paper: #fcf9f2;
-            --paper-alt: #f5efe4;
-            --ink: #1e1c18;
-            --ink-soft: #3b3832;
-            --muted: #6b6860;
-            --line: #d9d2c5;
-            --line-strong: #b9b1a2;
-            --accent: #c4492e;
-            --accent-dark: #962f1c;
-            --status: #2f6b4f;
-            --danger: #a13d30;
-            --white: #ffffff;
-
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e7e1d6;
-            color: var(--ink);
-        }
-
-        body {
-            min-height: 100vh;
-            background: #e7e1d6;
-            padding: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        /* ---------- TYPOGRAPHY ---------- */
-        h1, h2, h3, p, ul, ol, figure {
-            margin: 0;
-        }
-
-        h1 {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-weight: 400;
-            font-size: clamp(2.2rem, 7vw, 4.8rem);
-            line-height: 0.92;
-            letter-spacing: -0.03em;
-            color: var(--ink);
-        }
-
-        h2 {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-weight: 700;
-            font-size: 0.82rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--ink-soft);
-        }
-
-        .eyebrow, .section-number, .field-label, #save-status {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .eyebrow {
+        a{
             color: var(--accent-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-number {
-            color: var(--accent);
-            font-size: 0.8rem;
             font-weight: 700;
-            display: inline-block;
-        }
-
-        .muted {
-            color: var(--muted);
-        }
-
-        a {
-            color: var(--accent-dark);
-            font-weight: 600;
             text-decoration-thickness: 0.12em;
             text-underline-offset: 0.2em;
         }
+        a:hover { color: var(--accent); }
 
-        a:hover {
-            color: var(--accent);
-        }
+    .shell {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 1rem auto;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+    }
 
-        /* ---------- SHELL / LAYOUT ---------- */
-        .shell {
-            width: min(1180px, 100%);
-            margin: 0 auto;
-            background: var(--paper);
-            border: 1px solid var(--ink);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-        }
+    .masthead {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+      padding: clamp(1.25rem, 3vw, 2.5rem);
+      border-bottom: 4px solid var(--ink);
+    }
 
-        /* ---------- MASTHEAD ---------- */
-        .masthead {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: end;
-            padding: 2rem 2.5rem;
-            border-bottom: 3px solid var(--ink);
-            background: var(--paper);
-        }
+    .eyebrow, .section-number, .field-label, #save-status {
+      margin: 0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
 
-        #today {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-top: 0.6rem;
-            letter-spacing: 0.01em;
-        }
+    .eyebrow { margin-bottom: 0.7rem; color: var(--accent-dark); }
 
-        #save-status {
-            padding: 0.45rem 1rem;
-            border: 1px solid var(--status);
-            color: var(--status);
-            background: transparent;
-            text-align: center;
-            min-width: 8.5rem;
-            font-size: 0.65rem;
-            line-height: 1.3;
-        }
+    h1, h2, p { margin-top: 0; }
 
-        /* ---------- BUTTONS & INPUTS ---------- */
-        button, input, select, textarea {
-            font: inherit;
-        }
+    h1 {
+      margin-bottom: 0.55rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.35rem, 7vw, 5.7rem);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.055em;
+    }
 
-        button {
-            min-height: 2.6rem;
-            border: 1px solid var(--ink);
-            border-radius: 0;
-            padding: 0.55rem 1.1rem;
-            cursor: pointer;
-            color: var(--paper);
-            background: var(--ink);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: background 0.1s, color 0.1s, border-color 0.1s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.2;
-        }
+    h2 {
+      margin-bottom: 0;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
 
-        button:hover {
-            background: var(--accent-dark);
-            border-color: var(--accent-dark);
-        }
+    .muted { color: var(--muted); }
+    #today { margin-bottom: 0; font-size: 0.9rem; }
 
-        button:active {
-            background: var(--paper);
-            color: var(--ink);
-            border-color: var(--ink);
-        }
+    #save-status {
+      min-width: 9rem;
+      margin-bottom: 0.2rem;
+      padding: 0.55rem 0.7rem;
+      color: var(--status);
+      border: 1px solid currentColor;
+      text-align: center;
+    }
 
-        button:disabled {
-            background: var(--line);
-            border-color: var(--line-strong);
-            color: var(--paper);
-            cursor: not-allowed;
-        }
+    .section-heading {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 0.8rem;
+      align-items: baseline;
+      margin-bottom: 1.25rem;
+    }
 
-        button.secondary {
-            background: transparent;
-            color: var(--ink);
-            border-color: var(--line-strong);
-        }
+    .section-number { color: var(--accent-dark); }
 
-        button.secondary:hover {
-            background: var(--ink);
-            color: var(--paper);
-            border-color: var(--ink);
-        }
+    .priority-panel {
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+      border-bottom: 1px solid var(--ink);
+    }
 
-        button.danger {
-            background: transparent;
-            color: var(--danger);
-            border-color: var(--danger);
-        }
+    .priority-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 0.65rem;
+    }
 
-        button.danger:hover {
-            background: var(--danger);
-            color: var(--paper);
-        }
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(19rem, 0.65fr);
+    }
 
-        input {
-            width: 100%;
-            min-height: 2.6rem;
-            border: 1px solid var(--line-strong);
-            border-radius: 0;
-            padding: 0.55rem 0.8rem;
-            background: var(--white);
-            color: var(--ink);
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
+    .focus-panel {
+      min-width: 0;
+      padding: clamp(1.25rem, 4vw, 3rem);
+      border-right: 1px solid var(--ink);
+    }
 
-        input::placeholder {
-            color: #9b978f;
-            font-weight: 400;
-            font-size: 0.85rem;
-        }
+    .timer {
+      margin: clamp(1.5rem, 5vw, 4.5rem) 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(4.5rem, 15vw, 10.5rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 400;
+      line-height: 0.8;
+      letter-spacing: -0.075em;
+    }
 
-        input:focus-visible,
-        button:focus-visible,
-        a:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-        }
+    .timer-controls {
+      display: grid;
+      grid-template-columns: minmax(7rem, 0.8fr) repeat(4, auto);
+      gap: 0.55rem;
+      align-items: end;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+    }
 
-        /* ---------- SECTION HEADING ---------- */
-        .section-heading {
-            display: grid;
-            grid-template-columns: 2.2rem 1fr;
-            gap: 0.8rem;
-            align-items: baseline;
-            margin-bottom: 1.5rem;
-        }
+    .field-label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--muted);
+    }
 
-        /* ---------- PRIORITY PANEL ---------- */
-        .priority-panel {
-            padding: 1.8rem 2.5rem;
-            border-bottom: 1px solid var(--ink);
-            background: var(--paper-alt);
-        }
+    .rail { min-width: 0; }
 
-        .priority-form {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto auto;
-            gap: 0.7rem;
-        }
+    .links-panel, .history-panel {
+      padding: clamp(1.25rem, 3vw, 2rem);
+    }
 
-        /* ---------- WORKSPACE ---------- */
-        .workspace {
-            display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(19rem, 0.75fr);
-        }
+    .links-panel { border-bottom: 1px solid var(--ink); }
 
-        .focus-panel {
-            padding: 2.5rem;
-            border-right: 1px solid var(--ink);
-            background: var(--paper);
-        }
+    .stack { display: grid; gap: 0.6rem; }
 
-        .timer {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: clamp(4.5rem, 15vw, 9.5rem);
-            line-height: 0.8;
-            letter-spacing: -0.05em;
-            font-weight: 400;
-            color: var(--ink);
-            margin: 2rem 0 2.5rem 0;
-            font-variant-numeric: tabular-nums;
-        }
+    ul, ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
 
-        .timer-controls {
-            display: grid;
-            grid-template-columns: minmax(6.5rem, 0.7fr) repeat(4, auto);
-            gap: 0.6rem;
-            align-items: end;
-            padding-top: 1.2rem;
-            border-top: 1px solid var(--line-strong);
-        }
+    .link-list {
+      padding: 0;
+      margin-top: 1.25rem;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
 
-        .duration-field .field-label {
-            display: block;
-            margin-bottom: 0.3rem;
-            color: var(--muted);
-            font-size: 0.65rem;
-        }
+    .link-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: center;
+      min-height: 3rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--line);
+    }
 
-        /* ---------- RAIL (SIDEBAR) ---------- */
-        .rail {
-            display: flex;
-            flex-direction: column;
-            background: var(--paper);
-        }
+    .link-list button { min-height: 2.1rem; padding: 0.4rem 0.55rem; }
 
-        .links-panel {
-            padding: 2rem 2rem 1.8rem;
-            border-bottom: 1px solid var(--ink);
-        }
+    .history-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+    }
 
-        .history-panel {
-            padding: 1.8rem 2rem;
-            flex: 1;
-        }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 1.25rem;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
 
-        .stack {
-            display: grid;
-            gap: 0.7rem;
-        }
+    .stat { padding: 0.8rem 0; }
+    .stat + .stat { padding-left: 1rem; border-left: 1px solid var(--ink); }
 
-        /* ---------- LINK LIST ---------- */
-        .link-list {
-            list-style: none;
-            padding: 0;
-            margin-top: 1.5rem;
-            border-top: 1px solid var(--line);
-        }
+    .stat strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 400;
+      line-height: 1;
+    }
 
-        .link-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 0.75rem;
-            min-height: 3rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 0.9rem;
-        }
+    .stat span {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-        .link-list li a {
-            font-weight: 600;
-            color: var(--ink-soft);
-            text-decoration: none;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 65%;
-        }
+    #history {
+      display: grid;
+      gap: 0.65rem;
+      padding-left: 1.3rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
 
-        .link-list li a:hover {
-            color: var(--accent);
-            text-decoration: underline;
-            text-underline-offset: 0.2em;
-        }
+    @media (max-width: 900px) {
+      .workspace { grid-template-columns: 1fr; }
+      .focus-panel { border-right: 0; border-bottom: 1px solid var(--ink); }
+      .timer-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .duration-field { grid-column: 1 / -1; }
+    }
 
-        .link-list button {
-            min-height: 1.9rem;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.65rem;
-            background: transparent;
-            color: var(--muted);
-            border-color: var(--line-strong);
-        }
-
-        .link-list button:hover {
-            background: var(--danger);
-            color: var(--paper);
-            border-color: var(--danger);
-        }
-
-        /* ---------- HISTORY / STATS ---------- */
-        .history-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .history-heading .section-heading {
-            margin-bottom: 0;
-            flex: 1;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 1px solid var(--ink);
-            border-bottom: 1px solid var(--ink);
-            margin-bottom: 1.5rem;
-        }
-
-        .stat {
-            padding: 0.9rem 0;
-        }
-
-        .stat + .stat {
-            padding-left: 1rem;
-            border-left: 1px solid var(--ink);
-        }
-
-        .stat strong {
-            display: block;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 2.2rem;
-            font-weight: 400;
-            line-height: 1;
-            color: var(--ink);
-        }
-
-        .stat span {
-            font-family: 'Courier New', 'Courier', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        #history {
-            list-style: decimal;
-            padding-left: 1.4rem;
-            margin: 0;
-            color: var(--muted);
-            font-size: 0.85rem;
-            line-height: 1.5;
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        #history li::marker {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* subtle state utilities */
-        .link-list li:last-child {
-            border-bottom: none;
-        }
+    @media (max-width: 620px) {
+      .shell { width: calc(100% - 1rem); margin: 0.5rem auto; }
+      .masthead { grid-template-columns: 1fr; gap: 1.25rem; }
+      #save-status { width: 100%; text-align: left; }
+      .priority-form { grid-template-columns: 1fr; }
+      .timer { font-size: clamp(4rem, 25vw, 7rem); }
+      .timer-controls { grid-template-columns: 1fr 1fr; }
+      .timer-controls button { width: 100%; }
+      .history-heading { align-items: center; }
+    }
     </style>
 </head>
-<body>
-    <main class="shell">
-        <header class="masthead">
-            <div>
-                <p class="eyebrow">Local workstation / Daily docket</p>
-                <h1>Productivity Launchpad</h1>
-                <p id="today" class="muted"></p>
-            </div>
-            <p id="save-status" aria-live="polite">Loading...</p>
-        </header>
+    <body>
+        <main class="shell">
+            <header class="masthead">
+                <div>
+                    <p class="eyebrow">Local workstation / Daily docket</p>
+                    <h1>Productivity Launchpad</h1>
+                    <p id="today" class="muted"></p>
+                </div>
+                <p id="save-status" aria-live="polite">Loading...</p>
+            </header>
 
-        <section class="priority-panel" aria-labelledby="priority-heading">
-            <div class="section-heading">
-                <span class="section-number">01</span>
-                <h2 id="priority-heading">Today's Priority</h2>
-            </div>
-            <form id="priority-form" class="priority-form">
-                <input id="priority" maxlength="120" placeholder="What would make today successful?" required>
-                <button type="submit">Save Priority</button>
-                <button id="reset-day" class="secondary" type="button">Reset Day</button>
-            </form>
-        </section>
-
-        <section class="workspace">
-            <article class="focus-panel" aria-labelledby="focus-heading">
+            <section class="priority-panel" aria-labelledby="priority-heading">
                 <div class="section-heading">
-                    <span class="section-number">02</span>
-                    <h2 id="focus-heading">Focus session</h2>
+                    <span class="section-number">01</span>
+                    <h2 id="priority-heading">Today's Priority</h2>
                 </div>
-                <div id="timer" class="timer" aria-live="on">25:00</div>
-                <div class="timer-controls">
-                    <label class="duration-field">
-                        <span class="field-label">Minutes</span>
-                        <input type="button" id="duration" min="1" max="180" aria-label="25">
-                    </label>
-                    <button id="start" type="button">Start</button>
-                    <button id="pause" class="secondary" type="button">Pause</button>
-                    <button id="reset-timer" class="secondary" type="button">Reset</button>
-                    <button id="complete" class="secondary" type="button">Complete now</button>
-                </div>
-            </article>
-            <aside class="rail" aria-label="Launchpad records">
-                <section class="links-panel" aria-labelledby="links-heading">
-                    <div class="section-heading">
-                        <span class="section-number">03</span>
-                        <h2 id="links-heading">Pinned Links</h2>
-                    </div>
-                    <form id="link-form" class="stack">
-                        <input id="link-label" maxlength="50" aria-label="Link label" placeholder="Label" required>
-                        <input type="url" id="link-url" maxlength="500" aria-label="Link URL" placeholder="https://example.com" required>
-                        <button type="submit">Pin Link</button>
-                    </form>
-                    <ul id="links" class="link-list"></ul>
-                </section>
+                <form id="priority-form" class="priority-form">
+                    <input id="priority" maxlength="120" placeholder="What would make today successful?" required>
+                    <button type="submit">Save Priority</button>
+                    <button id="reset-day" class="secondary" type="button">Reset Day</button>
+                </form>
+            </section>
 
-                <section class="history-panel" aria-labelledby="history-heading">
-                    <div class="history-heading">
+            <section class="workspace">
+                <article class="focus-panel" aria-labelledby="focus-heading">
+                    <div class="section-heading">
+                        <span class="section-number">02</span>
+                        <h2 id="focus-heading">Focus session</h2>
+                    </div>
+                    <div id="timer" class="timer" aria-live="off">25:00</div>
+                    <div class="timer-controls">
+                        <label class="duration-field">
+                            <span class="field-label">Minutes</span>
+                            <input type="button" id="duration" min="1" max="180" value="25">
+                        </label>
+                        <button id="start" type="button">Start</button>
+                        <button id="pause" class="secondary" type="button">Pause</button>
+                        <button id="reset-timer" class="secondary" type="button">Reset</button>
+                        <button id="complete" class="secondary" type="button">Complete now</button>
+                    </div>
+                </article>
+                <aside class="rail" aria-label="Launchpad records">
+                    <section class="links-panel" aria-labelledby="links-heading"> 
                         <div class="section-heading">
+                            <span class="section-number">03</span>
+                            <h2 id="links-heading">Pinned Links</h2>
+                        </div>
+                        <form id="link-form" class="stack">
+                            <input id="link-label" maxlength="50" aria-label="Link label" placeholder="Label" required>
+                            <input type="url" id="link-url" maxlength="500" aria-label="Link URL" placeholder="https://example.com" required>
+                            <button type="submit">Pin Link</button>
+                        </form>
+                        <ul id="links" class="link-list"></ul>
+                    </section>
+                    
+                    <section class="history-panel" aria-labelledby="history-heading">
+                        <div class="section-heading history-heading">
+                            <div style="display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.8rem; align-items: baseline;">
                             <span class="section-number">04</span>
                             <h2 id="history-heading">Focus log</h2>
+                            </div>
+                            <button id="clear-history" class="danger" type="button">Clear</button>
                         </div>
-                        <button id="clear-history" class="danger" type="button">Clear</button>
-                    </div>
-                    <div class="stats">
-                        <div class="stat">
-                            <strong id="session-count">0</strong>
-                            <span class="muted">sessions</span>
-                        </div>
-                        <div class="stat">
-                            <strong id="minute-count">0</strong>
-                            <span class="muted">minutes</span>
-                        </div>
-                    </div>
-                    <ol id="history"></ol>
-                </section>
-            </aside>
-        </section>
-    </main>
+                        <div class="stats">
+                            <div class="stat">
+                                <strong id="session-count">0</strong>
+                                <span class="muted">sessions</span>
+                            </div>
+                            <div class="stat">
+                                <strong id="minute-count">0</strong>
+                                <span class="muted">minutes</span>
+                            </div>
+                            <ol id="history"></ol>
+                    </section>
+                </aside>
+            </section>
+        </main>
         <script>
             const elements ={
                 today: document.querySelector("#today"),
